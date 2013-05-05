@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRoQygUaF8YdrtjtiIp4BERnTvVVQ-vMw&sensor=true">
+    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="salmon.js"></script>
+  </head>
+  <body>
+  	<!-- <div class="main_wrapper"> -->
+  		<!-- <div id="map-canvas"/> -->
+	  <form id="calculate-route" name="calculate-route" action="#" method="get">
+		  <label for="from">From:</label>
+		  <input type="text" id="from" name="from" required="required" placeholder="An address" size="30" />
+		  <a id="from-link" href="#">Get my position</a>
+		  <br />
+		  <label for="to">To:</label>
+		  <input type="text" id="to" name="to" required="required" placeholder="Another address" size="30" />
+		  <a id="to-link" href="#">Get my position</a>
+		  <br />
+		  <input type="submit" />
+		  <input type="reset" />
+	</form>
+  	<div id="map"></div>
+  	<div id="directions"></div>
+    <p id="error"></p>
+
+	<!-- </div> -->
+  </body>
+</html>
