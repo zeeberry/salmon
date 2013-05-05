@@ -3,11 +3,14 @@
 * 
 * by zeeberry + alonecuzzo 
 *
-* Many thanks to Aurelio De Rosa
+* Many thanks to:
+* Aurelio De Rosa
 * http://www.sitepoint.com/find-a-route-using-the-geolocation-and-the-google-maps-api/
 *
+* Alex T.
+* http://www.isgoodstuff.com/2012/07/22/cross-domain-xml-using-jquery/
+*
 */
-
 function calculateRoute(from, to) {
 // Center initialized to New York
   var myOptions = {
@@ -38,7 +41,36 @@ function calculateRoute(from, to) {
     });
 }
 
+function requestXml(url){
+  $.ajax({
+          url: url,
+          dataType: "xml",
+          type: 'GET',
+          success: function(res) {
+            var myXML = res.responseText;
+            // This is the part xml2Json comes in.
+            var JSONConvertedXML = $.xml2json(myXML);
+            $('#myXMLList').empty();
+            for(var i = 0; i < JSONConvertedXML.facility.length; i++){
+              //alert(JSONConvertedXML.facility[0].Name);
+              $('#myXMLList').append('<li><a href="#">'+JSONConvertedXML.facility[i].Name+'</a></li>');
+              
+            }
+          }
+      });
+
+}
+
 $(document).ready(function() {
+
+  
+//request xml data from nyc datasets
+//requestXml("http://www.nycgovparks.org/bigapps/DPR_RecreationCenter_001.xml");
+// requestXml("http://www.nycgovparks.org/bigapps/DPR_HistoricHouses_001.xml");
+// requestXml("http://www.nycgovparks.org/bigapps/DPR_Hiking_001.xml");
+requestXml("http://www.nycgovparks.org/bigapps/DPR_RunningTracks_001.xml");
+      
+
 // If the browser supports the Geolocation API
   if (typeof navigator.geolocation == "undefined") {
 
