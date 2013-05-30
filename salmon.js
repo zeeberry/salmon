@@ -11,9 +11,10 @@
 * http://www.isgoodstuff.com/2012/07/22/cross-domain-xml-using-jquery/
 *
 */
+var myOptions;
 function calculateRoute(from, to) {
 // Center initialized to New York
-  var myOptions = {
+  myOptions = {
       zoom: 10,
       center: new google.maps.LatLng(40.7142, 74.0064),
       mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -40,6 +41,26 @@ function calculateRoute(from, to) {
           $("#error").append("Unable to retrieve your route<br />");
     });
 }
+function requestPlace(from, type){
+  var request = {
+    location: from,
+    radius: 500,
+    types: [type]
+  };
+  var placesMap = new google.maps.Map(document.getElementById('map-canvas'),myOptions);
+  var placeService = new google.maps.places.PlacesService(placesMap);
+  service.nearbySearch(request, placeCallback);
+
+}
+
+function placeCallback(results, status){
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+      for (var i = 0; i < results.length; i++) {
+        console.log(results[i]);
+      }
+    }
+
+}
 
 function requestXml(url){
   $.ajax({
@@ -59,6 +80,15 @@ function requestXml(url){
           }
       });
 
+}
+function geocode(address){
+  geocoder.geocode({'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+            return results.geometry.location;
+      } else {
+        console.log("Geocode was not successful for the following reason: " + status);
+      }
+    });
 }
 
 $(document).ready(function() {
@@ -106,5 +136,7 @@ requestXml("http://www.nycgovparks.org/bigapps/DPR_RunningTracks_001.xml");
   $("#calculate-route").submit(function(event) {
           event.preventDefault();
           calculateRoute($("#from").val(), $("#to").val());
+          var placeType = 'subway_station';
+          //requestPlace(from, placeType);
         });
       });
