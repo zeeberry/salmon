@@ -11,7 +11,7 @@
 * http://www.isgoodstuff.com/2012/07/22/cross-domain-xml-using-jquery/
 *
 */
-var myOptions;
+var myOptions,from, to;
 function calculateRoute(from, to) {
 // Center initialized to New York
   myOptions = {
@@ -49,7 +49,7 @@ function requestPlace(from, type){
   };
   var placesMap = new google.maps.Map(document.getElementById('map-canvas'),myOptions);
   var placeService = new google.maps.places.PlacesService(placesMap);
-  service.nearbySearch(request, placeCallback);
+  placeService.nearbySearch(request, placeCallback);
 
 }
 
@@ -58,6 +58,8 @@ function placeCallback(results, status){
       for (var i = 0; i < results.length; i++) {
         console.log(results[i]);
       }
+    }else{
+      console.log('Callback not successful - '+ status);
     }
 
 }
@@ -82,9 +84,12 @@ function requestXml(url){
 
 }
 function geocode(address){
+  var geocoder = new google.maps.Geocoder();
   geocoder.geocode({'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
-            return results.geometry.location;
+            var fromCoord = results[0].geometry.location;
+            var placeType = 'subway_station';
+            requestPlace(fromCoord, placeType);
       } else {
         console.log("Geocode was not successful for the following reason: " + status);
       }
@@ -135,8 +140,10 @@ requestXml("http://www.nycgovparks.org/bigapps/DPR_RunningTracks_001.xml");
   
   $("#calculate-route").submit(function(event) {
           event.preventDefault();
-          calculateRoute($("#from").val(), $("#to").val());
-          var placeType = 'subway_station';
-          //requestPlace(from, placeType);
+          from = $("#from").val();
+          to = $("#to").val();
+          geocode(from);
+          calculateRoute(from, to);
+          
         });
       });
